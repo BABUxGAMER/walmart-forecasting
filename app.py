@@ -549,5 +549,5 @@ else:
             ).properties(
                 title="Next 1st Week Forecast Distribution"
             )
-            st.altair_chart(fig, use_container_width=True)
+            st.altair_chart(fig, width="stretch")
 
