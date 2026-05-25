@@ -334,7 +334,7 @@ col_btn, _ = st.columns([1, 2])
 with col_btn:
     if st.button(
         "📅 Show More 2 Weeks" if not st.session_state.show_extra_weeks else "📅 Show Next Week Only",
-        use_container_width=True
+        width="stretch"
     ):
         st.session_state.show_extra_weeks = not st.session_state.show_extra_weeks
         st.rerun()
@@ -486,7 +486,7 @@ if product_report.empty:
     st.dataframe(
         product_groups[["category", "total_sales_formatted"]]
         .rename(columns={"category": "Category", "total_sales_formatted": "Total Sales"}),
-        use_container_width=True
+        width="stretch"
     )
 else:
     if st.session_state.get("show_extra_weeks", False):
@@ -538,7 +538,7 @@ else:
         st.dataframe(
             product_groups[["category", "total_sales_formatted"]]
             .rename(columns={"category": "Category", "total_sales_formatted": "Total Sales"}),
-            use_container_width=True
+            width="stretch"
         )
     with col2:
         if not chart_data.empty:
