@@ -528,7 +528,6 @@ else:
     
     chart_data = product_report.copy()
     chart_data["Next 1st Week Forecast Numeric"] = chart_data["Next 1st Week Forecast"].replace("-", np.nan).replace(r"[$,]", "", regex=True).astype(float)
-    chart_data = chart_data.dropna(subset=["Next 1st Week Forecast Numeric"])
     
     st.markdown("---")
     
@@ -541,13 +540,57 @@ else:
             width="stretch"
         )
     with col2:
-        if not chart_data.empty:
-            fig = alt.Chart(chart_data).mark_arc(innerRadius=60).encode(
-                theta=alt.Theta(field="Next 1st Week Forecast Numeric", type="quantitative"),
-                color=alt.Color(field="Category", type="nominal", legend=alt.Legend(title="Category")),
-                tooltip=["Category", "Next 1st Week Forecast Numeric"]
-            ).properties(
-                title="Next 1st Week Forecast Distribution"
-            )
-            st.altair_chart(fig, width="stretch")
+        if st.session_state.get("show_extra_weeks", False):
+            chart_data["Next 2nd Week Forecast Numeric"] = chart_data["Next 2nd Week Forecast"].replace("-", np.nan).replace(r"[$,]", "", regex=True).astype(float)
+            chart_data["Next 3rd Week Forecast Numeric"] = chart_data["Next 3rd Week Forecast"].replace("-", np.nan).replace(r"[$,]", "", regex=True).astype(float)
+            chart_data_clean = chart_data.dropna(subset=["Next 1st Week Forecast Numeric", "Next 2nd Week Forecast Numeric", "Next 3rd Week Forecast Numeric"])
+            
+            if not chart_data_clean.empty:
+                st.subheader("Forecast Distributions")
+                tab1, tab2, tab3 = st.tabs([
+                    f"Next 1st Week ({store_dates[0]})",
+                    f"Next 2nd Week ({store_dates[1]})",
+                    f"Next 3rd Week ({store_dates[2]})"
+                ])
+                with tab1:
+                    fig1 = alt.Chart(chart_data_clean).mark_arc(innerRadius=60).encode(
+                        theta=alt.Theta(field="Next 1st Week Forecast Numeric", type="quantitative"),
+                        color=alt.Color(field="Category", type="nominal", legend=alt.Legend(title="Category")),
+                        tooltip=["Category", "Next 1st Week Forecast Numeric"]
+                    ).properties(
+                        title="Next 1st Week Forecast Distribution"
+                    )
+                    st.altair_chart(fig1, width="stretch")
+                
+                with tab2:
+                    fig2 = alt.Chart(chart_data_clean).mark_arc(innerRadius=60).encode(
+                        theta=alt.Theta(field="Next 2nd Week Forecast Numeric", type="quantitative"),
+                        color=alt.Color(field="Category", type="nominal", legend=alt.Legend(title="Category")),
+                        tooltip=["Category", "Next 2nd Week Forecast Numeric"]
+                    ).properties(
+                        title="Next 2nd Week Forecast Distribution"
+                    )
+                    st.altair_chart(fig2, width="stretch")
+                    
+                with tab3:
+                    fig3 = alt.Chart(chart_data_clean).mark_arc(innerRadius=60).encode(
+                        theta=alt.Theta(field="Next 3rd Week Forecast Numeric", type="quantitative"),
+                        color=alt.Color(field="Category", type="nominal", legend=alt.Legend(title="Category")),
+                        tooltip=["Category", "Next 3rd Week Forecast Numeric"]
+                    ).properties(
+                        title="Next 3rd Week Forecast Distribution"
+                    )
+                    st.altair_chart(fig3, width="stretch")
+        else:
+            chart_data_clean = chart_data.dropna(subset=["Next 1st Week Forecast Numeric"])
+            if not chart_data_clean.empty:
+                st.subheader("Forecast Distributions")
+                fig1 = alt.Chart(chart_data_clean).mark_arc(innerRadius=60).encode(
+                    theta=alt.Theta(field="Next 1st Week Forecast Numeric", type="quantitative"),
+                    color=alt.Color(field="Category", type="nominal", legend=alt.Legend(title="Category")),
+                    tooltip=["Category", "Next 1st Week Forecast Numeric"]
+                ).properties(
+                    title="Next 1st Week Forecast Distribution"
+                )
+                st.altair_chart(fig1, width="stretch")
 
