@@ -341,25 +341,25 @@ with col_btn:
 
 if store_forecast is not None:
     if st.session_state.show_extra_weeks and len(store_forecasts) >= 3:
-        st.subheader("📈 Store-Level 3-Week Forecast")
+        st.subheader("📈 Store-Level Next 3-Week Forecast")
         m_col1, m_col2, m_col3 = st.columns(3)
         with m_col1:
             st.metric(
-                label=f"Next 1st Week ({store_dates[0]})",
+                label=f"1st Week ({store_dates[0]})",
                 value=format_currency(store_forecasts[0]),
                 delta=f"{store_forecast_delta:.2f}%"
             )
         with m_col2:
             wk2_delta = ((store_forecasts[1] - store_forecasts[0]) / store_forecasts[0] * 100) if store_forecasts[0] != 0 else 0
             st.metric(
-                label=f"Next 2nd Week ({store_dates[1]})",
+                label=f"2nd Week ({store_dates[1]})",
                 value=format_currency(store_forecasts[1]),
                 delta=f"{wk2_delta:.2f}% (vs Wk 1)"
             )
         with m_col3:
             wk3_delta = ((store_forecasts[2] - store_forecasts[1]) / store_forecasts[1] * 100) if store_forecasts[1] != 0 else 0
             st.metric(
-                label=f"Next 3rd Week ({store_dates[2]})",
+                label=f"3rd Week ({store_dates[2]})",
                 value=format_currency(store_forecasts[2]),
                 delta=f"{wk3_delta:.2f}% (vs Wk 2)"
             )
