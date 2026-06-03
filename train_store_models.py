@@ -449,9 +449,9 @@ for category in categories:
     print(f"Best model: {selected_model_name}")
     print(f"Best model R2: {best_metrics['R2']:6.3f}")
     if threshold_hit:
-        print(f"Target R2 >= {TARGET_R2:.2f} achieved ✅")
+        print(f"Target R2 >= {TARGET_R2:.2f} achieved [OK]")
     else:
-        print(f"Target R2 >= {TARGET_R2:.2f} NOT achieved — keeping best available model.")
+        print(f"Target R2 >= {TARGET_R2:.2f} NOT achieved - keeping best available model.")
     print(f"Model saved to: {model_path}")
 
     results_summary.append({

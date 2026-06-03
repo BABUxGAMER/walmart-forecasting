@@ -56,11 +56,11 @@ print("Stores found:", df["Branch"].nunique())
 # =====================================================
 results_summary = []
 
-stores = df["Branch"].unique()
+stores = sorted(df["Branch"].unique())
 
-for store in stores:
+for idx, store in enumerate(stores, 1):
     print("\n======================================")
-    print(f"Training model for Category: {store}")
+    print(f"({idx}/{len(stores)}) Training model for Category: {store}")
     print("======================================")
 
     store_df = df[df["Branch"] == store].copy()
