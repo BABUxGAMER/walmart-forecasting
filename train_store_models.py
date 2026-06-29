@@ -1,7 +1,8 @@
-import pandas as pd
-import numpy as np
-import os
+from pathlib import Path
+
 import joblib
+import numpy as np
+import pandas as pd
 import warnings
 
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
@@ -10,6 +11,8 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import GridSearchCV, TimeSeriesSplit
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import PolynomialFeatures, StandardScaler
+
+from walmart_utils import DATA_FILE, MODELS_DIR, build_weekly_features, clean_sales_data, ensure_models_dir, load_sales_data, safe_filename
 
 warnings.filterwarnings("ignore")
 
@@ -95,40 +98,9 @@ def build_branch_time_data(category_df, freq="W"):
 
     return periods.dropna()
 
-# =====================================================
-# 1. LOAD DATA
-# =====================================================
-DATA_PATH = "data.csv"
-MODELS_DIR = "models"
+ensure_models_dir()
 
-os.makedirs(MODELS_DIR, exist_ok=True)
-
-df = pd.read_csv(DATA_PATH)
-
-# =====================================================
-# 2. CLEAN & PREPARE DATA
-# =====================================================
-
-# Parse date (your format: DD/MM/YY)
-df["date"] = pd.to_datetime(df["date"], format="%d/%m/%y", errors="coerce")
-
-# Clean unit_price (remove $ and commas)
-df["unit_price"] = (
-    df["unit_price"]
-    .astype(str)
-    .str.replace("$", "", regex=False)
-    .str.replace(",", "")
-    .astype(float)
-)
-
-# Ensure quantity is numeric
-df["quantity"] = pd.to_numeric(df["quantity"], errors="coerce").fillna(0)
-
-# Compute sales (USD)
-df["sales"] = df["unit_price"] * df["quantity"]
-
-# Drop invalid rows
-df = df.dropna(subset=["date", "sales", "Branch"])
+df = load_sales_data(DATA_FILE)
 
 print("Data loaded successfully")
 print("Total rows:", len(df))
